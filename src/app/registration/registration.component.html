@@ -1,0 +1,23 @@
+<form
+  class="registration-form"
+  (ngSubmit)="submit()"
+  [formGroup]="registrationForm"
+  *ngIf="
+    registrationResolverOutput.isRegistrationFormConfigValid;
+    else errorTemplate
+  ">
+  <ng-container
+    *ngFor="let field of registrationResolverOutput.registrationFieldList">
+    <input
+      class="registration-form__input"
+      type="text"
+      [attr.placeholder]="field.label"
+      [formControlName]="field.name" />
+  </ng-container>
+  <button
+    class="registration-form__submit-button"
+    [disabled]="registrationForm.invalid">
+    Submit
+  </button>
+</form>
+<ng-template #errorTemplate>Seems like the config is not valid!</ng-template>

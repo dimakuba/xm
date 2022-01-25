@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  background: #eaeaea;
+  padding: 50px 50px;
+  border-radius: 8px;
+
+  &__input {
+    margin-bottom: 25px;
+    font-size: 18px;
+    font-family: inherit;
+    padding: 7px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: 1px solid #0d5fcc;
+    }
+  }
+
+  &__submit-button {
+    font-family: inherit;
+    font-size: 18px;
+    cursor: pointer;
+    color: #757575;
+    border: 2px solid #ccc;
+    border-radius: 40px;
+    padding: 10px 40px;
+    background-color: transparent;
+    transition: 300ms background-color;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: #ccc;
+    }
+  }
+}
