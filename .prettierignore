@@ -1,0 +1,10 @@
+.github
+.idea
+.vscode
+coverage
+dist
+node_modules
+src/assets
+package-lock.json
+setenv.ts
+tslint.json

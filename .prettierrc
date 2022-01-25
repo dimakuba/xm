@@ -1,0 +1,13 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSameLine": true,
+  "overrides": [
+    {
+      "files": "*.js",
+      "options": {
+        "trailingComma": "es5"
+      }
+    }
+  ]
+}
