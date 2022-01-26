@@ -6,9 +6,6 @@ import { REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE } from '../interceptors/stub-
 
 describe('ValidatorService', () => {
   let service: ValidatorService;
-  const data = REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE.map(
-    (f) => new RegistrationField(f),
-  );
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -20,12 +17,19 @@ describe('ValidatorService', () => {
   });
 
   it('should be valid', fakeAsync(() => {
+    const data = REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE.map(
+      (f) => new RegistrationField(f),
+    );
+
     service.validate(data).subscribe((isValid) => {
       expect(isValid).toBeTruthy();
     });
   }));
 
   it('should be invalid', fakeAsync(() => {
+    const data = REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE.map(
+      (f) => new RegistrationField(f),
+    );
     const [formField] = data;
     formField.type = 1 as any;
 
