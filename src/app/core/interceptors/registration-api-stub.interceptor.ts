@@ -7,7 +7,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE } from '../models/registration';
+import { REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE } from './stub-response';
 
 @Injectable()
 export class RegistrationApiStubInterceptor implements HttpInterceptor {

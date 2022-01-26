@@ -1,10 +1,8 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 
 import { ValidatorService } from './validator.service';
-import {
-  REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE,
-  RegistrationField,
-} from '../models/registration';
+import { RegistrationField } from '../models/registration';
+import { REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE } from '../interceptors/stub-response';
 
 describe('ValidatorService', () => {
   let service: ValidatorService;

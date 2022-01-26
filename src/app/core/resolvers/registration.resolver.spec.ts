@@ -8,12 +8,12 @@ import { CoreModule } from '../core.module';
 import { ValidatorService } from '../services/validator.service';
 import { Observable, of } from 'rxjs';
 import {
-  REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE,
   RegistrationField,
   RegistrationFormConfig,
 } from '../models/registration';
 import { HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE } from '../interceptors/stub-response';
 
 @Injectable()
 class ValidatorServiceMock extends ValidatorService {
