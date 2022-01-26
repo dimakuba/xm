@@ -18,7 +18,7 @@
     <input
       class="form-field__input"
       [attr.type]="computeFormFieldType(field.type)"
-      [attr.placeholder]="field.label + (field.required ? ' *' : '')"
+      [attr.placeholder]="formatPlaceholder(field)"
       [formControlName]="field.name" />
     <p
       class="form-field__error"

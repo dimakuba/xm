@@ -40,6 +40,44 @@ export class RegistrationComponent {
     private userService: UserService,
   ) {}
 
+  submit() {
+    console.info(this.registrationForm.value);
+
+    this.registrationApiService
+      .register(this.registrationForm.value)
+      .subscribe({
+        next: (registered: boolean) => {
+          if (registered) {
+            this.userService.isAuthorized = true;
+            this.router.navigateByUrl('/welcome');
+          }
+        },
+        error: (e) => this.errorHandler.handle(e),
+      });
+  }
+
+  getFirstErrorOfFormControl(formControlName: string): string {
+    const [firstError] = Object.values(
+      this.registrationForm.get(formControlName)?.errors ?? {},
+    );
+
+    return firstError;
+  }
+
+  computeFormFieldType(type: string): string {
+    return type === 'password' && !this.showHiddenPassword
+      ? 'password'
+      : 'text';
+  }
+
+  togglePasswordVisibility() {
+    this.showHiddenPassword = !this.showHiddenPassword;
+  }
+
+  formatPlaceholder({ label, required }: RegistrationField): string {
+    return label + (required ? ' *' : '');
+  }
+
   private buildRegistrationForm(config: RegistrationFormConfig): FormGroup {
     return this.fb.group(
       config.reduce((form, field) => {
@@ -101,39 +139,5 @@ export class RegistrationComponent {
           return null;
       }
     };
-  }
-
-  submit() {
-    console.info(this.registrationForm.value);
-
-    this.registrationApiService
-      .register(this.registrationForm.value)
-      .subscribe({
-        next: (registered: boolean) => {
-          if (registered) {
-            this.userService.isAuthorized = true;
-            this.router.navigateByUrl('/welcome');
-          }
-        },
-        error: (e) => this.errorHandler.handle(e),
-      });
-  }
-
-  getFirstErrorOfFormControl(formControlName: string): string {
-    const [firstError] = Object.values(
-      this.registrationForm.get(formControlName)?.errors ?? {},
-    );
-
-    return firstError;
-  }
-
-  computeFormFieldType(type: string): string {
-    return type === 'password' && !this.showHiddenPassword
-      ? 'password'
-      : 'text';
-  }
-
-  togglePasswordVisibility() {
-    this.showHiddenPassword = !this.showHiddenPassword;
   }
 }
