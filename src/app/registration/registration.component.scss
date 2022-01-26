@@ -1,16 +1,16 @@
 :host {
   display: block;
+  max-width: 450px;
+  width: 100%;
 }
 
-.registration-form {
-  display: flex;
-  flex-direction: column;
-  background: #eaeaea;
-  padding: 50px 50px;
-  border-radius: 8px;
+.form-field {
+  width: 100%;
+  margin-bottom: 25px;
 
   &__input {
-    margin-bottom: 25px;
+    width: 100%;
+    box-sizing: border-box;
     font-size: 18px;
     font-family: inherit;
     padding: 7px 15px;
@@ -25,6 +25,21 @@
       outline: 1px solid #0d5fcc;
     }
   }
+
+  &__error {
+    color: red;
+    margin: 10px 0 0 0;
+    padding-left: 5px;
+    font-size: 12px;
+  }
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  background: #eaeaea;
+  padding: 50px 50px;
+  border-radius: 8px;
 
   &__submit-button {
     font-family: inherit;

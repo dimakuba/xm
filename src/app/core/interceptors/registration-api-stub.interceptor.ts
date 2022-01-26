@@ -22,6 +22,13 @@ export class RegistrationApiStubInterceptor implements HttpInterceptor {
           body: REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE,
         }),
       );
+    } else if (request.url.includes('/api/signup')) {
+      return of(
+        new HttpResponse({
+          status: 200,
+          body: true,
+        }),
+      );
     }
 
     return next.handle(request);

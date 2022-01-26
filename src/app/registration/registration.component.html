@@ -6,14 +6,23 @@
     registrationResolverOutput.isRegistrationFormConfigValid;
     else errorTemplate
   ">
-  <ng-container
+  <div
+    class="form-field"
     *ngFor="let field of registrationResolverOutput.registrationFieldList">
     <input
-      class="registration-form__input"
+      class="form-field__input"
       type="text"
-      [attr.placeholder]="field.label"
+      [attr.placeholder]="field.label + (field.required ? ' *' : '')"
       [formControlName]="field.name" />
-  </ng-container>
+    <p
+      class="form-field__error"
+      *ngIf="
+        registrationForm.get(field.name)?.touched &&
+        getFirstErrorOfFormControl(field.name) as error
+      ">
+      {{ error }}
+    </p>
+  </div>
   <button
     class="registration-form__submit-button"
     [disabled]="registrationForm.invalid">

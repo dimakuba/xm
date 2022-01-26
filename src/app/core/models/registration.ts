@@ -1,20 +1,36 @@
-export interface FieldValidation {
-  name: string;
-  message: string;
-  value: string | number;
+import { IsBoolean, IsDefined, IsString } from 'class-validator';
+
+export class FieldValidation {
+  @IsDefined() @IsString() name: string;
+  @IsDefined() @IsString() message: string;
+  @IsDefined() value: string | number;
+
+  constructor(options: FieldValidation) {
+    this.name = options.name;
+    this.message = options.message;
+    this.value = options.value;
+  }
 }
 
-export interface RegistrationField {
-  type: 'text' | 'email' | 'phone' | 'password';
-  name: string;
-  label: string;
-  required: boolean;
+export class RegistrationField {
+  @IsDefined() @IsString() name: string;
+  @IsDefined() @IsString() type: 'text' | 'email' | 'phone' | 'password';
+  @IsDefined() @IsString() label: string;
+  @IsDefined() @IsBoolean() required: boolean;
   validations?: FieldValidation[];
+
+  constructor(options: RegistrationField) {
+    this.name = options.name;
+    this.type = options.type;
+    this.label = options.label;
+    this.required = options.required;
+    this.validations = options?.validations?.map((v) => new FieldValidation(v));
+  }
 }
 
 export type RegistrationFormConfig = RegistrationField[];
 
-interface RegistrationRequest {
+export interface RegistrationRequest {
   [fieldName: string]: string;
 }
 
@@ -33,7 +49,7 @@ export const REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE: RegistrationField[] = [
       {
         name: 'maxlength',
         message: 'Must be less than 64 characters.',
-        value: 63,
+        value: 64,
       },
     ],
   },
@@ -51,7 +67,7 @@ export const REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE: RegistrationField[] = [
       {
         name: 'maxlength',
         message: 'Must be less than 64 characters.',
-        value: 63,
+        value: 64,
       },
     ],
   },
@@ -69,7 +85,7 @@ export const REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE: RegistrationField[] = [
       {
         name: 'maxlength',
         message: 'Must be less than 64 characters.',
-        value: 63,
+        value: 64,
       },
     ],
   },
@@ -87,7 +103,7 @@ export const REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE: RegistrationField[] = [
       {
         name: 'maxlength',
         message: 'Must be less than 47 characters.',
-        value: 46,
+        value: 47,
       },
     ],
   },
@@ -105,7 +121,7 @@ export const REGISTRATION_FORM_FIELDS_RESPONSE_EXAMPLE: RegistrationField[] = [
       {
         name: 'maxlength',
         message: 'Must be less than 47 characters.',
-        value: 10,
+        value: 47,
       },
       {
         name: 'minlength',

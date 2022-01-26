@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RegistrationResolverOutput } from '../core/resolvers/registration.resolver';
 import {
   AbstractControl,
@@ -10,8 +10,11 @@ import {
 } from '@angular/forms';
 import {
   FieldValidation,
+  RegistrationField,
   RegistrationFormConfig,
 } from '../core/models/registration';
+import { RegistrationApiService } from '../core/services/registration-api.service';
+import { ErrorHandler } from '../core/services/error-handler.service';
 
 @Component({
   selector: 'app-registration',
@@ -26,14 +29,20 @@ export class RegistrationComponent {
     this.registrationResolverOutput.registrationFieldList,
   );
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private registrationApiService: RegistrationApiService,
+    private errorHandler: ErrorHandler,
+    private router: Router,
+  ) {}
 
   private buildRegistrationForm(config: RegistrationFormConfig): FormGroup {
     return this.fb.group(
       config.reduce((form, field) => {
         form[field.name] = this.fb.control(
           null,
-          this.createFieldValidators(field.validations),
+          this.createFieldValidators(field),
         );
 
         return form;
@@ -42,29 +51,49 @@ export class RegistrationComponent {
   }
 
   private createFieldValidators(
-    fieldValidations: FieldValidation[] | undefined,
+    registrationField: RegistrationField,
   ): ValidatorFn[] {
-    if (!fieldValidations) {
-      return [];
-    }
+    const fieldValidations = registrationField.validations ?? [];
 
-    return fieldValidations.map((fieldValidation) =>
-      this.createFieldValidator(fieldValidation),
-    );
+    return [
+      ...fieldValidations.map((fieldValidation) =>
+        this.createFieldValidator(fieldValidation),
+      ),
+      ...(registrationField.required
+        ? [
+            this.createFieldValidator({
+              name: 'required',
+              value: '',
+              message: 'The field is required.',
+            }),
+          ]
+        : []),
+    ];
   }
 
   private createFieldValidator(fieldValidation: FieldValidation): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (control.value == null || control.value.length === 0) {
-        return null; // don't validate empty values to allow optional controls
+        return fieldValidation.name === 'required'
+          ? { required: fieldValidation.message }
+          : null;
       }
 
-      console.log(control.value);
       switch (fieldValidation.name) {
         case 'regex':
           return new RegExp(fieldValidation.value as string).test(control.value)
             ? null
             : { regex: fieldValidation.message };
+        case 'maxlength':
+          return typeof control.value.length === 'number' &&
+            control.value.length > fieldValidation.value
+            ? { maxlength: fieldValidation.message }
+            : null;
+        case 'minlength':
+          return typeof control.value.length === 'number' &&
+            control.value.length < fieldValidation.value
+            ? { minlength: fieldValidation.message }
+            : null;
         default:
           return null;
       }
@@ -72,8 +101,23 @@ export class RegistrationComponent {
   }
 
   submit() {
-    if (this.registrationForm.invalid) {
-      return;
-    }
+    this.registrationApiService
+      .register(this.registrationForm.value)
+      .subscribe({
+        next: (registered: boolean) => {
+          if (registered) {
+            this.router.navigateByUrl('/welcome');
+          }
+        },
+        error: (e) => this.errorHandler.handle(e),
+      });
+  }
+
+  getFirstErrorOfFormControl(formControlName: string): string {
+    const [firstError] = Object.values(
+      this.registrationForm.get(formControlName)?.errors ?? {},
+    );
+
+    return firstError;
   }
 }

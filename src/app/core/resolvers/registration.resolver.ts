@@ -4,7 +4,7 @@ import {
   Resolve,
   RouterStateSnapshot,
 } from '@angular/router';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { RegistrationApiService } from '../services/registration-api.service';
 import { RegistrationFormConfig } from '../models/registration';
 import { ErrorHandler } from '../services/error-handler.service';
@@ -32,14 +32,16 @@ export class RegistrationResolver
     state: RouterStateSnapshot,
   ): Observable<RegistrationResolverOutput> {
     return this.registrationApiService.fetchRegistrationFormConfig().pipe(
-      map(
-        (registrationFieldList) =>
-          ({
-            isRegistrationFormConfigValid: this.validatorService.validate(
-              registrationFieldList,
-            ),
-            registrationFieldList,
-          } as RegistrationResolverOutput),
+      switchMap((registrationFieldList) =>
+        this.validatorService.validate(registrationFieldList).pipe(
+          map(
+            (isRegistrationFormConfigValid) =>
+              ({
+                isRegistrationFormConfigValid,
+                registrationFieldList,
+              } as RegistrationResolverOutput),
+          ),
+        ),
       ),
       catchError((e) => {
         this.errorHandler.handle(e);

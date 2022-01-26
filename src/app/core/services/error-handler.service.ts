@@ -4,5 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ErrorHandler {
-  handle(e: Error) {}
+  handle(e: Error) {
+    alert(e.message);
+  }
 }
