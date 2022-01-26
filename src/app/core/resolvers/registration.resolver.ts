@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  Resolve,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { Resolve } from '@angular/router';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { RegistrationApiService } from '../services/registration-api.service';
 import { RegistrationFormConfig } from '../models/registration';
@@ -27,10 +23,7 @@ export class RegistrationResolver
     private validatorService: ValidatorService,
   ) {}
 
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
-  ): Observable<RegistrationResolverOutput> {
+  resolve(): Observable<RegistrationResolverOutput> {
     return this.registrationApiService.fetchRegistrationFormConfig().pipe(
       switchMap((registrationFieldList) =>
         this.validatorService.validate(registrationFieldList).pipe(

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, Router, UrlSegment, UrlTree } from '@angular/router';
+import { CanLoad, Router, UrlTree } from '@angular/router';
 import { UserService } from '../services/user.service';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { UserService } from '../services/user.service';
 export class WelcomeGuard implements CanLoad {
   constructor(private userService: UserService, private router: Router) {}
 
-  canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree {
+  canLoad(): boolean | UrlTree {
     return this.userService.isAuthorized
       ? true
       : this.router.parseUrl('/registration');
