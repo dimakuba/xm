@@ -9,9 +9,15 @@
   <div
     class="form-field"
     *ngFor="let field of registrationResolverOutput.registrationFieldList">
+    <span
+      *ngIf="field.type === 'password'"
+      class="material-icons form-field__icon"
+      (click)="togglePasswordVisibility()">
+      visibility
+    </span>
     <input
       class="form-field__input"
-      type="text"
+      [attr.type]="computeFormFieldType(field.type)"
       [attr.placeholder]="field.label + (field.required ? ' *' : '')"
       [formControlName]="field.name" />
     <p
@@ -29,4 +35,6 @@
     Submit
   </button>
 </form>
-<ng-template #errorTemplate>Seems like the config is not valid!</ng-template>
+<ng-template #errorTemplate
+  ><p class="error-message">Seems like the config is not valid!</p></ng-template
+>

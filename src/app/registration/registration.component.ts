@@ -15,6 +15,7 @@ import {
 } from '../core/models/registration';
 import { RegistrationApiService } from '../core/services/registration-api.service';
 import { ErrorHandler } from '../core/services/error-handler.service';
+import { UserService } from '../core/services/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -28,6 +29,7 @@ export class RegistrationComponent {
   registrationForm: FormGroup = this.buildRegistrationForm(
     this.registrationResolverOutput.registrationFieldList,
   );
+  showHiddenPassword = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +37,7 @@ export class RegistrationComponent {
     private registrationApiService: RegistrationApiService,
     private errorHandler: ErrorHandler,
     private router: Router,
+    private userService: UserService,
   ) {}
 
   private buildRegistrationForm(config: RegistrationFormConfig): FormGroup {
@@ -101,11 +104,14 @@ export class RegistrationComponent {
   }
 
   submit() {
+    console.info(this.registrationForm.value);
+
     this.registrationApiService
       .register(this.registrationForm.value)
       .subscribe({
         next: (registered: boolean) => {
           if (registered) {
+            this.userService.isAuthorized = true;
             this.router.navigateByUrl('/welcome');
           }
         },
@@ -119,5 +125,15 @@ export class RegistrationComponent {
     );
 
     return firstError;
+  }
+
+  computeFormFieldType(type: string): string {
+    return type === 'password' && !this.showHiddenPassword
+      ? 'password'
+      : 'text';
+  }
+
+  togglePasswordVisibility() {
+    this.showHiddenPassword = !this.showHiddenPassword;
   }
 }
