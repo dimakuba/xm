@@ -21,6 +21,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["validator"],
             "outputPath": "dist/xm",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -94,9 +95,18 @@
             "styles": ["src/styles.scss"],
             "scripts": []
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+          }
         }
       }
     }
   },
-  "defaultProject": "xm"
+  "defaultProject": "xm",
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
+  }
 }
